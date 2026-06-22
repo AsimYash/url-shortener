@@ -1,10 +1,14 @@
 # 🔗 LinkSnip — URL Shortener
 
-A full-stack URL Shortener web application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf**.
+A full-stack URL Shortener web application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf.
 
-LinkSnip converts long URLs into short, easy-to-share links with support for custom short codes and automatic redirection.
+LinkSnip is a full-stack URL shortening platform built using Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf. The application supports custom short codes, automatic URL generation, input validation, persistent storage, and browser-based redirection through a clean web interface.
 
 ---
+
+## Repository
+
+https://github.com/AsimYash/url-shortener
 
 ## 🚀 Features
 
@@ -95,7 +99,7 @@ java -version
 
 mvn -version
 1. Clone Repository
-git clone YOUR_GITHUB_REPOSITORY_LINK
+git clone https://github.com/AsimYash/url-shortener.git
 
 cd url-shortener
 2. Create MySQL Database
@@ -177,11 +181,23 @@ URL must start with http:// or https://
 
 (Add screenshots after running the project)
 
-screenshots/
+## Screenshots
 
-├── home.png
-├── shortened-url.png
-└── redirect.png
+### Home Page
+![Home](screenshots/Home.png)
+
+### URL Creation
+![Creation](screenshots/Creation.png)
+
+### Successful Short URL
+![Success](screenshots/Success.png)
+
+### Redirect Working
+![Redirect](screenshots/Redirect.png)
+
+### Validation Error
+![Validation](screenshots/Validation.png)
+
 🔮 Future Improvements
 User authentication
 JWT security
@@ -214,9 +230,4 @@ Redirects to the original URL.
 
 ASIM YASH
 
-GitHub:
-YOUR_GITHUB_PROFILE_LINK
-
-📄 License
-
-This project is open-source and available under the MIT License.
+GitHub: https://github.com/AsimYash
