@@ -5,7 +5,7 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8-blue)
 ![Maven](https://img.shields.io/badge/Maven-Build-red)
 
-![Deployment](https://img.shields.io/badge/Live-Render-success)
+![Deployment](https://img.shields.io/badge/Deployment-Render-purple)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
 A full-stack URL Shortener application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf**.
