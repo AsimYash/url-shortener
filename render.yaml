@@ -12,7 +12,7 @@
 services:
   - type: web
     name: linksnip-url-shortener
-    env: java
+    runtime: java
     region: oregon            # Free tier region (oregon or frankfurt)
     plan: free                # Free plan (spins down after 15 min of inactivity)
 
