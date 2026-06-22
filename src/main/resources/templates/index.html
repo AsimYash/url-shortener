@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!--
+    Thymeleaf Namespace: xmlns:th="http://www.thymeleaf.org"
+    This enables th:* attributes which Thymeleaf processes server-side
+    before sending HTML to the browser.
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkSnip — URL Shortener</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!--
+        th:href="@{/css/style.css}"
+        @{} is a Thymeleaf URL expression — it generates the correct URL
+        including the context path (e.g., /myapp/css/style.css if deployed at /myapp)
+    -->
+</head>
+<body>
+
+<!-- ── Navigation Bar ─────────────────────────────────── -->
+<nav class="navbar">
+    <div class="container">
+        <a th:href="@{/}" class="nav-brand">
+            🔗 LinkSnip
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/swagger-ui.html}" target="_blank">API Docs</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── Hero Section ───────────────────────────────────── -->
+<main>
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Shorten Your Links</h1>
+            <p class="hero-subtitle">
+                Transform long, unwieldy URLs into clean, shareable short links in seconds.
+            </p>
+
+            <!-- ── URL Shortening Form ─────────────────────────────── -->
+            <!--
+                th:action="@{/shorten}" → form submits to POST /shorten
+                th:object="${urlRequest}" → binds form to the CreateUrlRequest object
+                                           from model.addAttribute("urlRequest", ...)
+            -->
+            <div class="form-card">
+                <form th:action="@{/shorten}" th:object="${urlRequest}" method="post">
+
+                    <!-- Error message from controller (non-validation errors) -->
+                    <!--
+                        th:if="${errorMessage}" → only shows this div if errorMessage exists in model
+                        th:text="${errorMessage}" → sets the text content to the error message
+                    -->
+                    <div class="alert alert-error" th:if="${errorMessage}">
+                        <span>⚠️ </span><span th:text="${errorMessage}">Error message here</span>
+                    </div>
+
+                    <!-- Original URL Input -->
+                    <div class="form-group">
+                        <label for="originalUrl" class="form-label">Enter your long URL</label>
+                        <!--
+                            th:field="*{originalUrl}" binds this input to the originalUrl field
+                            of the th:object (urlRequest). It automatically sets:
+                              - name="originalUrl"
+                              - id="originalUrl"
+                              - value="${urlRequest.originalUrl}" (for re-population on error)
+                        -->
+                        <input
+                            type="url"
+                            id="originalUrl"
+                            th:field="*{originalUrl}"
+                            class="form-input"
+                            placeholder="https://www.example.com/very/long/url/that/needs/shortening"
+                            required
+                        />
+                        <!--
+                            th:if="${#fields.hasErrors('originalUrl')}" → shows only if validation failed
+                            th:errors="*{originalUrl}" → displays the validation error message
+                        -->
+                        <span class="form-error" th:if="${#fields.hasErrors('originalUrl')}"
+                              th:errors="*{originalUrl}">URL error</span>
+                    </div>
+
+                    <!-- Advanced Options (collapsible) -->
+                    <details class="advanced-options">
+                        <summary>⚙️ Advanced Options (Optional)</summary>
+
+                        <div class="advanced-grid">
+                            <!-- Custom Short Code -->
+                            <div class="form-group">
+                                <label for="customCode" class="form-label">Custom Short Code</label>
+                                <div class="input-prefix-wrapper">
+                                    <span class="input-prefix">linksnip.io/</span>
+                                    <input
+                                        type="text"
+                                        id="customCode"
+                                        th:field="*{customCode}"
+                                        class="form-input"
+                                        placeholder="my-custom-code"
+                                        maxlength="20"
+                                    />
+                                </div>
+                                <span class="form-error" th:if="${#fields.hasErrors('customCode')}"
+                                      th:errors="*{customCode}">Custom code error</span>
+                                <small class="form-hint">3–20 chars, letters/numbers/hyphens only</small>
+                            </div>
+
+                            <!-- Title -->
+                            <div class="form-group">
+                                <label for="title" class="form-label">Title (Optional)</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    th:field="*{title}"
+                                    class="form-input"
+                                    placeholder="e.g., My Product Launch"
+                                    maxlength="255"
+                                />
+                            </div>
+
+                            <!-- Expiration Date -->
+                            <div class="form-group">
+                                <label for="expiresAt" class="form-label">Expires At (Optional)</label>
+                                <input
+                                    type="datetime-local"
+                                    id="expiresAt"
+                                    name="expiresAt"
+                                    class="form-input"
+                                />
+                                <small class="form-hint">Leave blank for no expiration</small>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        ✂️ Shorten URL
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Features Section ─────────────────────────────── -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why LinkSnip?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant</h3>
+                    <p>Shorten any URL in milliseconds with our fast Spring Boot backend.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics</h3>
+                    <p>Track every click and see how your links perform over time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Custom Codes</h3>
+                    <p>Choose your own short code for memorable, branded links.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Expiration</h3>
+                    <p>Set an expiry date so your links automatically deactivate.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ── Footer ─────────────────────────────────────────── -->
+<footer class="footer">
+    <div class="container">
+        <p>Built with ❤️ using Spring Boot • <a th:href="@{/swagger-ui.html}" target="_blank">API Docs</a></p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

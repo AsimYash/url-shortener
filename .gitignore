@@ -1,0 +1,67 @@
+# ── Compiled Output ──────────────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# ── Maven ────────────────────────────────────────────────────
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ── IDE Files ────────────────────────────────────────────────
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.eclipse/
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ── OS Files ─────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── Logs ─────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ── Environment / Secrets ─────────────────────────────────────
+# NEVER commit these files — they contain database passwords!
+.env
+.env.local
+.env.production
+application-local.properties
+application-prod.properties
+secrets.properties
+
+# ── Spring Boot ───────────────────────────────────────────────
+spring-shell.log
+
+# ── Test Reports ─────────────────────────────────────────────
+test-results/
+surefire-reports/

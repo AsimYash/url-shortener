@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        PARENT: Spring Boot's parent POM gives us default configurations,
+        plugin versions, and dependency management so we don't have to
+        manually specify versions for most Spring libraries.
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+        <relativePath/>
+    </parent>
+
+    <!-- Project coordinates — uniquely identify this project in Maven -->
+    <groupId>com.urlshortener</groupId>
+    <artifactId>url-shortener</artifactId>
+    <version>1.0.0</version>
+    <name>url-shortener</name>
+    <description>A production-ready URL Shortener built with Spring Boot</description>
+
+    <properties>
+        <!-- Tell Maven and Spring Boot to use Java 21 -->
+        <java.version>21</java.version>
+    </properties>
+
+    <dependencies>
+
+        <!--
+            SPRING BOOT WEB STARTER
+            Includes: Spring MVC, embedded Tomcat server, Jackson (JSON serialization)
+            Why: Lets us build REST APIs and serve HTTP responses without any external server setup
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--
+            SPRING DATA JPA STARTER
+            Includes: Hibernate ORM, Spring Data JPA repositories
+            Why: Lets us interact with the database using Java objects instead of raw SQL.
+                 We define entities (Java classes) and Spring handles the SQL automatically.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!--
+            THYMELEAF STARTER
+            Includes: Thymeleaf template engine
+            Why: Server-side HTML rendering for the web UI (the form to shorten URLs).
+                 Thymeleaf integrates natively with Spring MVC.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!--
+            SPRING VALIDATION STARTER
+            Includes: Hibernate Validator, Bean Validation API (JSR-380)
+            Why: Lets us annotate our DTOs with @NotBlank, @Size, @URL etc.
+                 and Spring will automatically validate incoming requests.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--
+            MYSQL CONNECTOR (Runtime only)
+            Why: The JDBC driver that lets our app talk to a MySQL database.
+                 "runtime" scope means it's only needed when the app actually runs,
+                 not during compile time.
+        -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            LOMBOK
+            Why: Reduces boilerplate code. With @Getter, @Setter, @Builder etc.,
+                 we don't have to manually write getters, setters, constructors.
+                 The "optional: true" means it's only used during compilation,
+                 not included in the final JAR.
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--
+            SPRINGDOC OPENAPI (Swagger)
+            Why: Automatically generates interactive API documentation at /swagger-ui.html
+                 Reads our @RestController and @RequestMapping annotations to build docs.
+        -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!--
+            H2 IN-MEMORY DATABASE (Test only)
+            Why: Used for unit tests so we don't need a real MySQL instance running.
+                 Tests run fast and in isolation.
+        -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            SPRING BOOT TEST STARTER
+            Includes: JUnit 5, Mockito, Spring Test, AssertJ
+            Why: Full testing toolkit for unit tests and integration tests.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--
+                SPRING BOOT MAVEN PLUGIN
+                Why: Packages our app into a single executable "fat JAR" that includes
+                     all dependencies. We run it with: java -jar app.jar
+                     Also excludes Lombok from the final artifact.
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

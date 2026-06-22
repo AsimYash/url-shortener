@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — LinkSnip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <a th:href="@{/}" class="nav-brand">🔗 LinkSnip</a>
+        <div class="nav-links">
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/swagger-ui.html}" target="_blank">API Docs</a>
+        </div>
+    </div>
+</nav>
+
+<main class="dashboard-main">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>📊 Dashboard</h1>
+            <a th:href="@{/}" class="btn btn-primary">+ New Short URL</a>
+        </div>
+
+        <!-- Stats Summary Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${totalUrls}">0</div>
+                <div class="stat-label">Total URLs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${totalClicks}">0</div>
+                <div class="stat-label">Total Clicks</div>
+            </div>
+        </div>
+
+        <!-- URLs Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <h2>All Shortened URLs</h2>
+            </div>
+
+            <!--
+                th:if="${#lists.isEmpty(urls)}" → shows if the list is empty
+                th:unless is the opposite of th:if
+            -->
+            <div class="empty-state" th:if="${#lists.isEmpty(urls)}">
+                <p>No URLs shortened yet. <a th:href="@{/}">Create your first one!</a></p>
+            </div>
+
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(urls)}">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Short URL</th>
+                            <th>Original URL</th>
+                            <th>Title</th>
+                            <th>Clicks</th>
+                            <th>Created</th>
+                            <th>Expires</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--
+                            th:each="url, stat : ${urls}"
+                            Loops over the urls list from the model.
+                            url  = current item
+                            stat = loop statistics (stat.index, stat.count, stat.even, stat.odd)
+                        -->
+                        <tr th:each="url, stat : ${urls}"
+                            th:class="${!url.isActive} ? 'row-inactive' : ''">
+
+                            <!-- Row number -->
+                            <td th:text="${stat.count}">1</td>
+
+                            <!-- Short URL (clickable link) -->
+                            <td>
+                                <a th:href="${url.shortUrl}"
+                                   th:text="${url.shortCode}"
+                                   target="_blank"
+                                   class="short-code-link">
+                                    code
+                                </a>
+                            </td>
+
+                            <!-- Original URL (truncated) -->
+                            <td>
+                                <span class="url-truncate" th:title="${url.originalUrl}"
+                                      th:text="${#strings.abbreviate(url.originalUrl, 50)}">
+                                    original url
+                                </span>
+                            </td>
+
+                            <!-- Title (or dash if not set) -->
+                            <td>
+                                <!--
+                                    th:text="${url.title} ?: '—'"
+                                    ?: is Thymeleaf's Elvis operator
+                                    If url.title is null/empty, show '—'
+                                -->
+                                <span th:text="${url.title} ?: '—'">title</span>
+                            </td>
+
+                            <!-- Click count with badge styling -->
+                            <td>
+                                <span class="click-badge" th:text="${url.clickCount}">0</span>
+                            </td>
+
+                            <!-- Created date -->
+                            <td th:text="${#temporals.format(url.createdAt, 'dd MMM yy')}">date</td>
+
+                            <!-- Expiry date -->
+                            <td>
+                                <span th:if="${url.expiresAt}"
+                                      th:text="${#temporals.format(url.expiresAt, 'dd MMM yy')}">
+                                    expiry
+                                </span>
+                                <span th:unless="${url.expiresAt}" class="muted">Never</span>
+                            </td>
+
+                            <!-- Active/Inactive badge -->
+                            <td>
+                                <span th:if="${url.isActive}" class="badge badge-active">Active</span>
+                                <span th:unless="${url.isActive}" class="badge badge-inactive">Inactive</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>Built with ❤️ using Spring Boot</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

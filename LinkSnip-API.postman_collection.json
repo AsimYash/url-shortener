@@ -1,0 +1,364 @@
+{
+  "info": {
+    "name": "LinkSnip — URL Shortener API",
+    "description": "Complete Postman collection for testing the URL Shortener REST API.\n\nHow to use:\n1. Import this file into Postman (File → Import)\n2. Set the `baseUrl` variable to your server (default: http://localhost:8080)\n3. Run requests in order: Create → Get Details → Redirect → Delete",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "description": "Change this to your deployed URL in production"
+    },
+    {
+      "key": "shortCode",
+      "value": "abc123",
+      "description": "Auto-populated after Create Short URL request"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Create Short URL (Auto-generated code)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Automatically save the shortCode for use in later requests",
+              "if (pm.response.code === 201) {",
+              "    const json = pm.response.json();",
+              "    pm.collectionVariables.set('shortCode', json.shortCode);",
+              "    console.log('Short code saved:', json.shortCode);",
+              "}",
+              "",
+              "pm.test('Status is 201 Created', () => {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response has shortUrl', () => {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.shortUrl).to.include(pm.collectionVariables.get('baseUrl'));",
+              "});",
+              "",
+              "pm.test('Click count starts at 0', () => {",
+              "    pm.expect(pm.response.json().clickCount).to.eql(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"originalUrl\": \"https://www.github.com/yourusername/url-shortener\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/urls",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls"]
+        },
+        "description": "Creates a short URL with an auto-generated 6-character code.\n\n**Expected Response (201):**\n```json\n{\n  \"id\": 1,\n  \"originalUrl\": \"https://www.github.com/...\",\n  \"shortCode\": \"a8bX2k\",\n  \"shortUrl\": \"http://localhost:8080/a8bX2k\",\n  \"clickCount\": 0,\n  \"createdAt\": \"2024-01-15T10:30:00\",\n  \"isActive\": true\n}\n```"
+      }
+    },
+    {
+      "name": "2. Create Short URL (Custom code)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201 Created', () => {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Uses our custom code', () => {",
+              "    pm.expect(pm.response.json().shortCode).to.eql('my-custom-link');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"originalUrl\": \"https://spring.io/projects/spring-boot\",\n  \"customCode\": \"my-custom-link\",\n  \"title\": \"Spring Boot Documentation\",\n  \"expiresAt\": \"2025-12-31T23:59:59\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/urls",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls"]
+        },
+        "description": "Creates a short URL with a custom short code, title, and expiration date."
+      }
+    },
+    {
+      "name": "3. Create Short URL (Validation Error — bad URL)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 400 Bad Request', () => {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Has fieldErrors object', () => {",
+              "    pm.expect(pm.response.json()).to.have.property('fieldErrors');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"originalUrl\": \"not-a-valid-url\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/urls",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls"]
+        },
+        "description": "Demonstrates validation error. URL must start with http:// or https://\n\n**Expected Response (400):**\n```json\n{\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"Validation failed. Check 'fieldErrors' for details.\",\n  \"fieldErrors\": {\n    \"originalUrl\": \"URL must start with http:// or https://\"\n  }\n}\n```"
+      }
+    },
+    {
+      "name": "4. Create Short URL (Conflict — code already taken)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 409 Conflict', () => {",
+              "    pm.response.to.have.status(409);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"originalUrl\": \"https://www.example.com\",\n  \"customCode\": \"my-custom-link\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/urls",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls"]
+        },
+        "description": "Try to use a custom code that was already taken in request #2.\n\n**Expected Response (409):**\n```json\n{\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"message\": \"Short code 'my-custom-link' is already in use.\"\n}\n```"
+      }
+    },
+    {
+      "name": "5. Get All URLs",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Returns an array', () => {",
+              "    pm.expect(pm.response.json()).to.be.an('array');",
+              "});",
+              "",
+              "pm.test('Array is not empty', () => {",
+              "    pm.expect(pm.response.json().length).to.be.greaterThan(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/urls",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls"]
+        },
+        "description": "Returns a list of all shortened URL mappings.\n\n**Expected Response (200):**\n```json\n[\n  {\n    \"id\": 1,\n    \"shortCode\": \"a8bX2k\",\n    \"originalUrl\": \"https://github.com/...\",\n    \"shortUrl\": \"http://localhost:8080/a8bX2k\",\n    \"clickCount\": 0,\n    ...\n  }\n]\n```"
+      }
+    },
+    {
+      "name": "6. Get URL Details by Short Code",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Short code matches', () => {",
+              "    const code = pm.collectionVariables.get('shortCode');",
+              "    pm.expect(pm.response.json().shortCode).to.eql(code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/urls/{{shortCode}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls", "{{shortCode}}"]
+        },
+        "description": "Get details and statistics for a specific short URL.\nUses the `shortCode` variable auto-populated from request #1."
+      }
+    },
+    {
+      "name": "7. Get URL Details — 404 Not Found",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404 Not Found', () => {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('Error message mentions the code', () => {",
+              "    pm.expect(pm.response.json().message).to.include('doesnotexist');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/urls/doesnotexist",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls", "doesnotexist"]
+        },
+        "description": "Demonstrates 404 response for non-existent short code.\n\n**Expected Response (404):**\n```json\n{\n  \"status\": 404,\n  \"error\": \"Not Found\",\n  \"message\": \"Short URL 'doesnotexist' not found.\"\n}\n```"
+      }
+    },
+    {
+      "name": "8. Redirect (Follow redirect to original URL)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Note: Postman follows redirects automatically by default.",
+              "// To see the raw 302, disable 'Follow Redirects' in Postman settings.",
+              "pm.test('Request succeeded (redirect followed)', () => {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/{{shortCode}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{shortCode}}"]
+        },
+        "description": "Redirects to the original URL.\n\n**Raw Response (302) — disable redirect following to see this:**\n```\nHTTP/1.1 302 Found\nLocation: https://www.github.com/yourusername/url-shortener\n```\n\nAfter this request, the click count for the URL should be incremented by 1."
+      }
+    },
+    {
+      "name": "9. Deactivate URL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 204 No Content', () => {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "",
+              "pm.test('Response body is empty', () => {",
+              "    pm.expect(pm.response.text()).to.be.empty;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/urls/{{shortCode}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "urls", "{{shortCode}}"]
+        },
+        "description": "Soft-deletes a short URL (sets isActive = false).\nThe record is kept in the database but the redirect no longer works.\n\n**Expected Response: 204 No Content (empty body)**"
+      }
+    },
+    {
+      "name": "10. Verify Deactivated URL Returns 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 404 (deactivated URLs not found)', () => {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/{{shortCode}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{shortCode}}"]
+        },
+        "description": "After deactivation, visiting the short URL should return 404.\nThis verifies the soft-delete worked correctly."
+      }
+    },
+    {
+      "name": "11. Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('App status is UP', () => {",
+              "    pm.expect(pm.response.json().status).to.eql('UP');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/actuator/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["actuator", "health"]
+        },
+        "description": "Spring Boot Actuator health endpoint.\nUseful for deployment health checks.\n\n**Expected Response:**\n```json\n{\n  \"status\": \"UP\",\n  \"components\": {\n    \"db\": { \"status\": \"UP\" },\n    \"diskSpace\": { \"status\": \"UP\" }\n  }\n}\n```"
+      }
+    }
+  ]
+}
