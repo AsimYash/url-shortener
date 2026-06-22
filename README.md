@@ -1,6 +1,6 @@
 # 🔗 LinkSnip — URL Shortener
 
-A full-stack URL Shortener web application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf.
+A full-stack URL Shortener web application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf**.
 
 LinkSnip is a full-stack URL shortening platform built using Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf. The application supports custom short codes, automatic URL generation, input validation, persistent storage, and browser-based redirection through a clean web interface.
 
@@ -98,6 +98,7 @@ Check versions:
 java -version
 
 mvn -version
+```
 1. Clone Repository
 git clone https://github.com/AsimYash/url-shortener.git
 
@@ -131,18 +132,20 @@ with your MySQL password.
 4. Run Application
 
 Using Maven:
-
+```
 mvn spring-boot:run
+```
 
 OR
 
 Build:
-
+```
 mvn clean package
-
+```
 Run:
-
+```
 java -jar target/*.jar
+```
 🌐 Open Application
 
 Open browser:
