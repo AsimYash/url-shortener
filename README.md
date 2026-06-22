@@ -5,67 +5,101 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8-blue)
 ![Maven](https://img.shields.io/badge/Maven-Build-red)
 
-A full-stack URL Shortener web application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf**.
+![Deployment](https://img.shields.io/badge/Deployment-Render-purple)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-LinkSnip is a full-stack URL shortening platform that supports custom short codes, automatic URL generation, input validation, persistent storage, and browser-based redirection through a clean web interface.
+A full-stack URL Shortener application built using **Java 21, Spring Boot, Spring Data JPA, MySQL, and Thymeleaf**.
+
+LinkSnip allows users to create short URLs, generate automatic short codes, create custom aliases, store URL mappings permanently, and redirect users through a clean web interface.
 
 ---
 
 ## 📦 Repository
 
-[GitHub Repository](https://github.com/AsimYash/url-shortener)
+GitHub:
+
+https://github.com/AsimYash/url-shortener
+
+---
 
 ## 🌐 Live Demo
 
-Coming Soon (Render Deployment)
+Deployed on Render:
+
+[Live Demo](https://url-shortener-mn6p.onrender.com)
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-* 🔗 Create short URLs from long URLs
-* 🎯 Custom short codes
-* ⚡ Automatic short code generation
-* 🔄 Redirect users to the original URL
-* ✅ URL validation
-* 🛡️ Exception handling
-* 💾 Persistent storage using MySQL
-* 🌐 Web-based user interface
-
----
-
-## 🛠️ Tech Stack
-
-### Backend
-
-* Java 21
-* Spring Boot 3
-* Spring MVC
-* Spring Data JPA
-* Hibernate
-
-### Database
-
-* MySQL
-
-### Frontend
-
-* Thymeleaf
-* HTML
-* CSS
-* JavaScript
-
-### Build Tool
-
-* Maven
+- 🔗 Create short URLs from long URLs
+- 🎯 Custom short codes
+- ⚡ Automatic short code generation
+- 🔄 Redirect users to original URLs
+- ✅ URL validation
+- 🛡️ Exception handling
+- 💾 Persistent MySQL database storage
+- 🌐 Web-based user interface
+- ☁️ Cloud deployment
 
 ---
 
-## 📂 Project Structure
+# 🔄 How It Works
+
+1. User enters a long URL.
+2. Application validates the URL.
+3. A unique short code is generated.
+4. URL mapping is stored in MySQL.
+5. Short URL redirects users to the original URL.
+
+# 🛠️ Tech Stack
+
+## Backend
+
+- Java 21
+- Spring Boot 3
+- Spring MVC
+- Spring Data JPA
+- Hibernate
+
+## Database
+
+- MySQL 8
+
+## Frontend
+
+- Thymeleaf
+- HTML
+- CSS
+- JavaScript
+
+## Deployment
+
+- Render
+
+
+## Build Tool
+
+- Maven
+
+
+# 🔐 Environment Variables
+
+Required environment variables:
+
+```env
+DB_URL=your_mysql_url
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+---
+
+# 📂 Project Structure
 
 ```text
 url-shortener/
-│
+
 ├── src/
 │   ├── main/
 │   │   ├── java/com/urlshortener/
@@ -81,51 +115,64 @@ url-shortener/
 │   │       └── application.properties
 │
 ├── screenshots/
+│   ├── render_home.png
+│   ├── render_CreationAndSuccess.png
+│   ├── render_redirect.png
+│   └── render_validation.png
+│
+├── Dockerfile
 ├── pom.xml
 └── README.md
 ```
 
 ---
 
-## ⚙️ Running Locally
+# ⚙️ Running Locally
 
-### Prerequisites
+## Requirements
 
 Install:
 
-* Java 21+
-* Maven
-* MySQL
+- Java 21+
+- Maven
+- MySQL
 
-Check versions:
+Check installation:
 
 ```bash
 java -version
 mvn -version
 ```
 
-### Clone Repository
+---
+
+## Clone Repository
 
 ```bash
 git clone https://github.com/AsimYash/url-shortener.git
+
 cd url-shortener
 ```
 
-### Create MySQL Database
+---
+
+## Create Database
 
 ```sql
 CREATE DATABASE urlshortener;
 ```
 
-### Configure Database
+---
+
+## Configure Database
 
 Open:
 
-```text
+```
 src/main/resources/application.properties
 ```
 
-Update:
+Add:
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/urlshortener
@@ -136,9 +183,9 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 ```
 
-Replace `YOUR_PASSWORD` with your MySQL password.
+---
 
-### Run Application
+## Run Application
 
 Using Maven:
 
@@ -146,115 +193,107 @@ Using Maven:
 mvn spring-boot:run
 ```
 
-Or build and run:
+or
 
 ```bash
 mvn clean package
+
 java -jar target/*.jar
 ```
 
 ---
 
-## 🌐 Open Application
+# ☁️ Deployment
 
-Open:
+The application is deployed on Render using Docker.
 
-```text
+Production environment:
+
+- Backend: Spring Boot
+- Database: MySQL
+- Hosting: Render
+
+# 🌐 URLs
+
+Local:
+
+```
 http://localhost:8080
+```
+
+Production:
+
+```
+https://url-shortener-mn6p.onrender.com
 ```
 
 ---
 
-## 🧪 Testing
+# 📸 Application Screenshots
 
-### Create Short URL
+## Home Page
+
+![Home](screenshots/render_home.png)
+
+
+## URL Creation & Success
+
+![Creation](screenshots/render_CreationAndSuccess.png)
+
+
+## Redirect Working
+
+![Redirect](screenshots/render_redirect.png)
+
+
+## Validation Error
+
+![Validation](screenshots/render_validation.png)
+
+---
+
+# 🧪 Testing
+
+Example:
 
 Long URL:
 
-```text
-https://www.google.com
+```
+https://www.youtube.com
 ```
 
 Custom Code:
 
-```text
-google
+```
+youtube
 ```
 
 Generated URL:
 
-```text
-http://localhost:8080/google
+```
+https://url-shortener-mn6p.onrender.com/youtube
 ```
 
 Opening the short URL redirects to:
 
-```text
-https://www.google.com
 ```
-
-### Validation Example
-
-Invalid input:
-
-```text
-google.com
-```
-
-Result:
-
-```text
-URL must start with http:// or https://
+https://www.youtube.com
 ```
 
 ---
 
-## 📸 Screenshots
+# 📌 API Endpoints
 
-### Home Page
+The application exposes REST APIs for creating short URLs and handling redirects.
 
-![Home](screenshots/Home.png)
 
-### URL Creation
-
-![Creation](screenshots/Creation.png)
-
-### Successful URL Creation
-
-![Success](screenshots/Success.png)
-
-### Redirect Working
-
-![Redirect](screenshots/Redirect.png)
-
-### Validation Error
-
-![Validation](screenshots/Validation.png)
-
----
-
-## 🔮 Future Improvements
-
-* User Authentication
-* JWT Security
-* QR Code Generation
-* Click Analytics Dashboard
-* Rate Limiting
-* Custom Domains
-* Docker Deployment
-* Cloud Hosting
-
----
-
-## 📌 API Endpoints
-
-### Create Short URL
+## Create Short URL
 
 ```http
 POST /api/urls
 ```
 
-Example Request:
+Example:
 
 ```json
 {
@@ -263,7 +302,9 @@ Example Request:
 }
 ```
 
-### Redirect
+---
+
+## Redirect
 
 ```http
 GET /{shortCode}
@@ -272,15 +313,36 @@ GET /{shortCode}
 Example:
 
 ```http
-GET /example
+GET /youtube
 ```
-
-Redirects to the original URL.
 
 ---
 
-## 👨‍💻 Author
+# 🔮 Future Improvements
+
+- User Authentication
+- JWT Security
+- QR Code Generation
+- Click Analytics Dashboard
+- Rate Limiting
+- Custom Domains
+- Docker Compose
+- Better UI Design
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+# 👨‍💻 Author
 
 **Asim Yash**
 
-GitHub: https://github.com/AsimYash
+GitHub:
+
+https://github.com/AsimYash
+
+---
